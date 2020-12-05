@@ -5,15 +5,11 @@ $lines =  file("input");
 function seatid($code) {
     $search = array("F", "B", "L", "R");
     $replace = array(0, 1, 0, 1);
-    $code = str_replace($search, $replace, $code);
-    $row = intval(substr($code, 0, 7), 2);
-    $col = intval(substr($code, 7), 2);
-    
-    return $row * 8 + $col;
+    return intval(str_replace($search, $replace, $code), 2);
 }
 
-//echo seatid("BBFFBBFRLL") . "<br>";
-//echo seatid("FFFBBBFRRR") . "<br>";
+echo seatid("BBFFBBFRLL") . "<br>";
+echo seatid("FFFBBBFRRR") . "<br>";
 
 $max = 0;
 $seats = array();
