@@ -1,6 +1,6 @@
 <?php
 
-$lines =  file("input.mb");
+$lines =  file("input.prod");
 
 $lines = array_map('intval', $lines);
 sort($lines);
@@ -34,7 +34,7 @@ function adapt($prev, $remainder, $lastval) {
     global $counter;
     if (sizeof($remainder) == 0) {
         //print_r($prev);
-        //pa($prev);
+        pa($prev);
         $counter++;
         //if ($counter % 1000 == 0) echo ".";
     }
@@ -52,30 +52,47 @@ function adapt($prev, $remainder, $lastval) {
 }
 
 $sequence[] = 0;
-adapt($sequence, $lines, 0);
+//adapt($sequence, $lines, 0);
 
-print_r($lines);
-echo "Part 2: " . $counter ."<br>";
+//echo "Part 2: " . $counter ."<br>";
 
+
+$counter = 0;
 function adapt2($index) {
-    global $lines;
+    global $lines, $counter;
     
-    $sum = 0;
-    for ($x = $index + 1; $x <= $index + 3; $x++) {
-        //echo "Checking " . $index . " vs. " . $x . "<br>";
-        if ($x < sizeof($lines) - 1) {
-            if ($lines[$x] - $lines[$index] <= 3) {
-                $sum += adapt2($x);
-            }
-        } else {
-            if ($lines[$x] - $lines[$index] <= 3) {
-                return max(1, $sum);
+    for ($x = $index + 1; $x < sizeof($lines); $x++) {
+        //echo  "Checking " . $index . " vs. " . $x . "<br>";
+        // check difference between 2 values if bigger than 3 jump out of this call
+        if (($lines[$x] - $lines[$index]) > 3) {
+            //echo "Failed: " . $index . " vs. " . $x . "<br>";
+            return;
+        }
+        else {
+            // check if $x has reached the end
+            if ($x == (sizeof($lines) - 1)) {
+                //echo "x";
+                $counter++;
+                if ($counter % 1000 == 0) {
+                    echo ".";
+                }
+                if ($counter % 200000 == 0) {
+                    echo "<br>";
+                }
+                    
+                return;
             } else {
-                return $sum;
+                // not at the end yet, proceed to the next step
+                adapt2($x);
             }
         }
     }
-    return $sum;
+    return;
 }
 
-echo "Part 2: " . adapt2(0);// toch recursief :/
+array_unshift($lines, 0);
+//adapt2(0);
+echo "Part 2: " . $counter;// toch recursief :/
+
+
+
