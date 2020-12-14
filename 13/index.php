@@ -21,21 +21,20 @@ echo "Part 1: " . (($mindeparture - $start) * $minbus) ."<br>";
 
 //==============[ Part II ]=======================
 
+// this algorithm works due to all the busses having a prime value
+
 print_r($busses);
 echo "<br>";
 
 $stepsize = 1;
 $timestamp = 1;
 foreach ($busses as $buskey => $busval) {
-    if ($busval != "x") {
-        echo $buskey . " - " . $busval . "<br>";
-        while (1) {
-            if (($timestamp + $buskey) % $busval == 0) {
-                $stepsize *= $busval;
-                echo "Timestamp: " . $timestamp . ", step: " . $stepsize . "<br>";
-                break;
-            }
-            $timestamp += $stepsize;
+    while (1) {
+        if (($timestamp + $buskey) % $busval == 0) { // find the first valid timestamp for current bus
+            $stepsize *= $busval;                    // and than multiply the stepsize with the modulo value 
+            echo "Bus: " . $buskey . " with value " . $busval . ", Timestamp: " . $timestamp . ", step: " . $stepsize . "<br>";
+            break;
         }
+        $timestamp += $stepsize;
     }
 }
