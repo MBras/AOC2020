@@ -38,7 +38,6 @@ def calc(tokens):
  
     # start with all additions
     while 1:
-        finaltokens = []
         # find first addition
         try:
            first = localtokens.index("+")
