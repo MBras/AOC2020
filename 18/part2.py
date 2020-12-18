@@ -10,9 +10,9 @@ def calc(tokens):
     # start scanning the string from left to right
     for token in tokens:
         # if we encounter an opening parentheses
-        if token == "(" and not(search): # start searching for the macthing closing bracket
+        if token == "(" and not(search): # start searching for the macthing closing parantheses
             search = 1
-            ptokens = []
+            ptokens = [] # tokens between parantheses
             pc = 1 # parantheses counter
         elif token == "(":
             # found another paranthese, increase pc
@@ -21,37 +21,36 @@ def calc(tokens):
         elif token == ")":
             pc -= 1
             if pc == 0:
-                # found the final parantheses, call calc for the subset
+                # found the final parantheses, stop searching and call calc for the subset
                 search = 0
                 localtokens.append(calc(ptokens))
             else:
-                # not the final closing bracket, continue
+                # not the final closing parantheses, continue
                 ptokens.append(token)
         elif search:
+            # still searching within paranetheses
             ptokens.append(token)
         else:
+            # not searching within parantheses
             localtokens.append(token)
 
     # all tokens are now cleaned up from paranthese, so perform the actual calculations
  
-    # start with all multiplications
-    done = 0
+    # start with all additions
     while 1:
         finaltokens = []
-        # find first multiplication
+        # find first addition
         try:
            first = localtokens.index("+")
         except ValueError:
+            # if none are found we're done
             break
 
-        # perform the multiplication and slice the begin and end of the tokens with the outcome in the middle
+        # perform the addition and slice the begin and end of the tokens with the outcome in the middle
         sum = int(localtokens[first - 1]) + int(localtokens[first + 1])
-        finaltokens = localtokens[0:max(first - 1, 0)] + [sum] + localtokens[first + 2:]
-        
-        # copy finaltokens to localtokens to go again
-        localtokens = finaltokens
+        localtokens = localtokens[0:max(first - 1, 0)] + [sum] + localtokens[first + 2:]
 
-    # next perform all additions
+    # next perform all multiplications
     sum = int(localtokens[0])
     for x in range(2, len(localtokens), 2):
         sum *= int(localtokens[x])
