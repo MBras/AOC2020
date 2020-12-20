@@ -1,7 +1,7 @@
 import re
 
 lines = open("input.1").read()
-#lines = open("input.2").read()
+lines = open("input.2").read()
 lines = lines.splitlines()
 
 readingrules = 1
@@ -34,18 +34,16 @@ def genregexp(rule):
     for match in matches:
         # check for the silly replace thingies
         if match == "8":
-            temp = "(?:" + genregexp(rules["42"]) + ")+"
-            regexp += temp
+            regexp += "(?:" + genregexp(rules["42"]) + ")+"
         elif match == "11":
-            temp = "(?:"
-            for x in range(1, 10): # learned from github.com/shoop, because my solution of 
-                                   # verifying if these two capture groups were equal in length didn't work
-                temp += x * ("(?:" + genregexp(rules["42"]) + ")")
-                temp += x * ("(?:" + genregexp(rules["31"]) + ")")
-                temp += "|"
-            temp = temp[:-1]
-            temp += ")"
-            regexp += temp
+            regexp += "((?:(?:" + genregexp(rules["42"]) + "){1}(?:" + genregexp(rules["31"]) + "){1})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){2}(?:" + genregexp(rules["31"]) + "){2})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){3}(?:" + genregexp(rules["31"]) + "){3})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){4}(?:" + genregexp(rules["31"]) + "){4})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){5}(?:" + genregexp(rules["31"]) + "){5})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){6}(?:" + genregexp(rules["31"]) + "){6})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){7}(?:" + genregexp(rules["31"]) + "){7})|"
+            regexp += "(?:(?:" + genregexp(rules["42"]) + "){8}(?:" + genregexp(rules["31"]) + "){8}))"
         else:
             try:
                 #print "Found it, now looking for " + rules[match]
