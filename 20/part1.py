@@ -39,9 +39,7 @@ def matchtile(t1, t2):
 
     for side1 in sides1:
         if side1 in sides2:
-            print "Fount a match!"
-            #printtile(t1)
-            #printtile(t2)
+            print "Found a match!"
             return 1
 
     return 0
@@ -67,8 +65,6 @@ for needle in tiles:
     for haystack in tiles:
         if needle <> haystack:
             print "Comparing " + needle + " vs. " + haystack
-            #printtile(needle, tiles[needle])
-            #printtile(haystack, tiles[haystack])
 
             if matchtile(tiles[needle], tiles[haystack]):
                 matches += 1
