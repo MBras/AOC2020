@@ -1,7 +1,7 @@
 import re
 
 lines = open("input.1").read()
-#lines = open("input.2").read()
+lines = open("input.2").read()
 lines = lines.splitlines()
 
 dirs = {0: "top", 1: "right", 2: "bottom", 3: "left"}
@@ -9,52 +9,45 @@ dirs = {0: "top", 1: "right", 2: "bottom", 3: "left"}
 tiles = {}
 
 #============[ print a given tile in a nice way
-def printtile(t):
-    for line in t:
+def printtile(name, data):
+    print "Tile: " + name
+    for line in data:
         print "".join(line)
     print ""
-        
-#============[  check line vs the tile returning if it's found, in which direction and flipped or not
-def cst(search, tile, x, y): 
-    found = 1
-    notfound = 0
 
-    print "Checking"
-    printtile(search)
-    print "against"
-    printtile(tile)
+#============[ check all sides of both tiles, and also in reverse
+def matchtile(t1, t2):
+    sides1 = []
+    sides2 = []
 
     # all sides to search for
-    tops = "".join(search[0])
-    rights = "".join([i[-1] for i in search])
-    bottoms = "".join(search[-1])
-    lefts = "".join([i[0] for i in search])
+    sides1.append("".join(t1[0])) # top
+    sides1.append("".join([i[-1] for i in t1])) # right
+    sides1.append("".join(t1[-1])) # bottom
+    sides1.append("".join([i[0] for i in t1])) # left
+    # including reversed ones
+    sides1.append("".join(t1[0])[::-1])
+    sides1.append("".join([i[-1] for i in t1])[::-1])
+    sides1.append("".join(t1[-1])[::-1])
+    sides1.append("".join([i[0] for i in t1])[::-1])
     
     # all sides  to search in
-    top = "".join(tile[0])
-    #print "top   : " + top
-    right = "".join([i[-1] for i in tile])
-    #print "right : " + right
-    bottom = "".join(tile[-1])
-    #print "bottom: " + bottom
-    left = "".join([i[0] for i in tile])
-    #print "left  : " + left
+    sides2.append("".join(t2[0]))
+    sides2.append("".join([i[-1] for i in t2]))
+    sides2.append("".join(t2[-1]))
+    sides2.append("".join([i[0] for i in t2]))
 
-    if tops == bottom: # top matches bottom
-        return found, search, x, y + 1
-    if bottoms == top: # bottom matches top
-        return found, search, x, y - 1
-    if lefts = right: # left matches right
-        return found, search, x - 1, y
-    if rights = left: # right mathes left
-        return found, search, x + 1, y
-    
+    for side1 in sides1:
+        if side1 in sides2:
+            print "Fount a match!"
+            #printtile(t1)
+            #printtile(t2)
+            return 1
+
+    return 0
     
 
-    return 0, 0, 0
-
-#============[ main bit  
-
+#============[ Read data into the tiles dictionary
 ct = 0 # currenttile
 for line in lines:
     m = re.search('Tile (\d+):', line)
@@ -67,23 +60,26 @@ for line in lines:
         #print "filling tile " + ct
         tiles[ct].append([c for c in line])
 
-# start with the first tile in the middle at 0,0
-resultkeys = {}
-resulttiles = {}
-resultkeys[0] = {}
-resulttiles[0] = {}
-resultkeys[0][0] = list(tiles.keys())[0]
-resulttiles[0][0] = tiles.pop(list(tiles.keys())[0])
+#============[ Match every tile vs every other tile and display matching sides
+corners = []
+for needle in tiles:
+    matches = 0
+    for haystack in tiles:
+        if needle <> haystack:
+            print "Comparing " + needle + " vs. " + haystack
+            #printtile(needle, tiles[needle])
+            #printtile(haystack, tiles[haystack])
 
-# while not all tiles have been matched
-while len(tiles) > 0:
-    # loop over the remaining tiles
-    for key in tiles.keys():
-        # check the tile against all tiles in the resultset
-        print "Checking tile " + key + ": "
-        printtile(tiles[key])
-        for xkey in resulttiles.keys():
-            for ykey, tile in resulttiles[xkey].items():
-                print "against tile " + str(resultkeys[xkey][ykey])
-                
-                found, fixedtile = cst(tiles[key], tile, xkey, ykey)
+            if matchtile(tiles[needle], tiles[haystack]):
+                matches += 1
+    print "  Found " + str(matches) + " matches."
+    if matches == 2:
+        # corners will have 2 matches
+        print "  Corner found at " + needle
+        corners.append(int(needle))
+
+part1 = 1
+for corner in corners:
+    part1 *= corner
+
+print "Part 1: " + str(part1)
