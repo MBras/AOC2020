@@ -59,3 +59,36 @@ print "Final ingredients:"
 print newingredients
 print "Part 1: " + str(len(newingredients))
 
+
+# ===========================[ PART II ]===========================
+finalallergens = {}
+
+# process all allergens
+while len(allergens) > 0:
+    for a in allergens:
+        if len(allergens[a]) == 1:
+            # found a unique ingredient
+            print "Matched '" + a + "' to '" + allergens[a][0] + "'"
+
+            # move the allergen to the finalallergens
+            atr = allergens[a][0] # allergen to remove
+            finalallergens[a] = atr
+            del allergens[a]
+            
+            # remove it from all other allergens
+            for a2 in allergens:
+                print "Removing " + atr + " from: "
+                print allergens[a2]
+                try:
+                    allergens[a2].remove(atr)
+                except ValueError:
+                    print atr + " not in the list"
+            break
+
+# sort allergens by key
+part2 = []
+for a in sorted(finalallergens):
+    part2.append(finalallergens[a])
+
+print "Part 2: " + ",".join(part2)
+
