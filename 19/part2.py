@@ -36,14 +36,7 @@ def genregexp(rule):
         if match == "8":
             regexp += "(?:" + genregexp(rules["42"]) + ")+"
         elif match == "11":
-            regexp += "((?:(?:" + genregexp(rules["42"]) + "){1}(?:" + genregexp(rules["31"]) + "){1})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){2}(?:" + genregexp(rules["31"]) + "){2})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){3}(?:" + genregexp(rules["31"]) + "){3})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){4}(?:" + genregexp(rules["31"]) + "){4})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){5}(?:" + genregexp(rules["31"]) + "){5})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){6}(?:" + genregexp(rules["31"]) + "){6})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){7}(?:" + genregexp(rules["31"]) + "){7})|"
-            regexp += "(?:(?:" + genregexp(rules["42"]) + "){8}(?:" + genregexp(rules["31"]) + "){8}))"
+            regexp += "((" + genregexp(rules["42"]) + ")+(" + genregexp(rules["31"]) + ")+)"
         else:
             try:
                 #print "Found it, now looking for " + rules[match]
@@ -56,15 +49,16 @@ def genregexp(rule):
     
     return regexp
 
-regexp = "^(" + genregexp(rules["0"]) + ")$"
+regexp = "^(?:" + genregexp(rules["0"]) + ")$"
 print "Regexp: " + regexp
 
 # counted with https://regex101.com/r/vcNmUG/2
 # but ok, here's the python code to count valid strings
 count = 0
 for puzzle in puzzles:
-    match = re.search(regexp, puzzle)
+    match = re.findall(regexp, puzzle)
     if match:
         count += 1
-        print "Match: " + puzzle
+        print match
+        #print "Match: " + puzzle
 print "Part 2: " + str(count)
