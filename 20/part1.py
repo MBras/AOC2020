@@ -38,7 +38,62 @@ def printpuzzle2(tiles):
             print 
         print
 
+#============[ PART II functions
+#============[ function to merge all tiles into a single huge tile
+def mergetiles(tiles):
+    result = []
 
+    for y in sorted(tiles[0]):
+        for tilex in range(len(tiles[0][0])):
+            resultline = []
+            for x in sorted(tiles):
+                resultline.extend(tiles[x][y][tilex])
+            result.append(resultline)
+    return result
+#============[ function to look for the seamonster in puzzle, starting from x, y
+def findmonster(puzzle, x, y):
+    #            1111111111
+    #  01234567890123456789
+    # 0                  # 
+    # 1#    ##    ##    ###
+    # 2 #  #  #  #  #  #   
+    #
+#    print "Looking for a monster at (" + str(x) + "," + str(y) + ")"
+    if puzzle[x][y + 1] == "#" and \
+       puzzle[x + 1][y + 2] == "#" and \
+       puzzle[x + 4][y + 2] == "#" and \
+       puzzle[x + 5][y + 1] == "#" and \
+       puzzle[x + 6][y + 1] == "#" and \
+       puzzle[x + 7][y + 2] == "#" and \
+       puzzle[x + 10][y + 2] == "#" and \
+       puzzle[x + 11][y + 1] == "#" and \
+       puzzle[x + 12][y + 1] == "#" and \
+       puzzle[x + 13][y + 2] == "#" and \
+       puzzle[x + 16][y + 2] == "#" and \
+       puzzle[x + 17][y + 1] == "#" and \
+       puzzle[x + 18][y + 0] == "#" and \
+       puzzle[x + 18][y + 1] == "#" and \
+       puzzle[x + 19][y + 1] == "#":
+        print "Found a monster at (" + str(x) + "," + str(y) + ")"
+        # update the tile with O
+        puzzle[x][y + 1] = "O"
+        puzzle[x + 1][y + 2] = "O"
+        puzzle[x + 4][y + 2] = "O"
+        puzzle[x + 5][y + 1] = "O"
+        puzzle[x + 6][y + 1] = "O"
+        puzzle[x + 7][y + 2] = "O"
+        puzzle[x + 10][y + 2] = "O"
+        puzzle[x + 11][y + 1] = "O"
+        puzzle[x + 12][y + 1] = "O"
+        puzzle[x + 13][y + 2] = "O"
+        puzzle[x + 16][y + 2] = "O"
+        puzzle[x + 17][y + 1] = "O"
+        puzzle[x + 18][y + 0] = "O"
+        puzzle[x + 18][y + 1] = "O"
+        puzzle[x + 19][y + 1] = "O"
+        return 1, puzzle
+    else:
+        return 0, puzzle
 
 #============[ functions to manipulate tiles
 
@@ -230,3 +285,44 @@ for x in resulttiles:
         resulttiles[x][y] = removeborder(resulttiles[x][y])
 
 printpuzzle2(resulttiles)
+
+# merge the cleaned tiles into one big grid
+puzzle = mergetiles(resulttiles)
+printtile("Final", puzzle)
+
+monsters = 0
+while 1:
+    for rotations in range(4):
+        for x in range(len(puzzle) - 19):
+            for y in range(len(puzzle[0]) - 3):
+                found, puzzle = findmonster(puzzle, x, y)
+                if found:
+                    monsters += 1
+        if monsters > 1:
+            break
+        puzzle = rotatetile(puzzle, 1)
+    puzzle = fliphtile(puzzle)
+    for rotations in range(4):
+        for x in range(len(puzzle) - 19):
+            for y in range(len(puzzle[0]) - 3):
+                found, puzzle = findmonster(puzzle, x, y)
+                if found:
+                    monsters += 1
+        if monsters > 1:
+            break
+        puzzle = rotatetile(puzzle, 1)
+    puzzle = flipvtile(puzzle)
+    for rotations in range(4):
+        for x in range(len(puzzle) - 19):
+            for y in range(len(puzzle[0]) - 3):
+                found, puzzle = findmonster(puzzle, x, y)
+                if found:
+                    monsters += 1
+        if monsters > 1:
+            break
+        puzzle = rotatetile(puzzle, 1)
+    break
+
+printtile("Final", puzzle)
+print "Monsters found: " + str(monsters)
+print "Part 2: " + str(sum([i.count('#') for i in puzzle]))
