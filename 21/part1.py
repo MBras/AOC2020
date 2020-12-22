@@ -1,7 +1,7 @@
 import re
 
 lines = open("input.1").read()
-#lines = open("input.2").read()
+lines = open("input.2").read()
 lines = lines.splitlines()
 
 ingredients = []
