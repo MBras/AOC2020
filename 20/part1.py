@@ -30,6 +30,16 @@ def printpuzzle(keys, tiles):
             print
         print
 
+def printpuzzle2(tiles):
+    for y in sorted(tiles[0]):
+        for tilex in range(len(tiles[0][0])):
+            for x in sorted(tiles):
+                print "".join(tiles[x][y][tilex]),
+            print 
+        print
+
+
+
 #============[ functions to manipulate tiles
 
 def rotatetile(t, steps): # rorate the tile [steps] times clockwise 90 degrees
@@ -204,3 +214,19 @@ c4 = resultkeys[sorted(resultkeys)[-1]][sorted(resultkeys[0])[-1]]
 print "Part 1: " + str(int(c1) * int(c2) * int(c3) * int(c4))
 
 # \o/
+
+#============[ Part 2
+
+# remove outside borders 
+def removeborder(tile):
+    blt = [] # borderless tile
+    for line in tile[1:-1]:
+        blt.append(line[1:-1])
+    
+    return blt
+
+for x in resulttiles:
+    for y in resulttiles[x]:
+        resulttiles[x][y] = removeborder(resulttiles[x][y])
+
+printpuzzle2(resulttiles)
